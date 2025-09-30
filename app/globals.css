@@ -1,0 +1,162 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------------------------
+   Base styles
+   --------------------------- */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    /* lighter in light mode, richer slate in dark mode */
+    @apply bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100 min-h-screen transition-colors duration-300;
+  }
+}
+
+/* ---------------------------
+   Utilities (custom tokens)
+   --------------------------- */
+@layer utilities {
+
+  /* Glass surfaces (tuned for better contrast in dark) */
+  .glass-light {
+    /* slightly more transparent so the rotating strip reads through */
+    @apply bg-white/70 backdrop-blur-3xl border border-slate-200/60 shadow-2xl shadow-slate-200/40;
+  }
+
+  .glass-dark {
+    @apply bg-slate-900/80 backdrop-blur-3xl border border-slate-700/60 shadow-2xl shadow-black/60;
+  }
+
+  /* Text gradients */
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-cyan-500 to-emerald-400;
+  }
+
+  .gradient-text-dark {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400;
+  }
+
+  /* Buttons */
+  .btn-primary {
+    @apply relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-600 to-cyan-600 px-6 py-3 font-semibold text-white shadow-lg shadow-blue-500/30 transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/50 hover:scale-[1.02] active:scale-[0.98];
+  }
+
+  .btn-primary-dark {
+    @apply relative overflow-hidden rounded-2xl bg-gradient-to-r from-indigo-500 to-cyan-500 px-6 py-3 font-semibold text-slate-900 shadow-lg shadow-indigo-500/20 transition-all duration-300 hover:shadow-xl hover:shadow-indigo-500/40 hover:scale-[1.02] active:scale-[0.98];
+  }
+
+  /* Card / stat wrapper */
+  .card-stat {
+    @apply relative overflow-hidden rounded-2xl p-6 backdrop-blur-xl transition-all duration-300 hover:scale-105;
+  }
+
+  /* Animated border (keeps your original effect but with slate tokens) */
+  .animated-border {
+    @apply relative;
+  }
+
+  /* move the pseudo-element rules out of @apply (Tailwind sometimes has issues
+     applying pseudo-element utilities inside @apply on some setups) */
+  .animated-border::after {
+    content: "";
+    @apply absolute inset-0 rounded-2xl border-2 border-transparent bg-gradient-to-r from-blue-500 via-cyan-500 to-emerald-400 bg-clip-border opacity-0 transition-opacity duration-300;
+  }
+
+  .animated-border:hover::after {
+    opacity: 1;
+  }
+
+  /* Glow effect (keeps the before pseudo-element approach but explicit) */
+  .glow-effect {
+    position: relative;
+  }
+
+  .glow-effect::before {
+    content: "";
+    @apply absolute inset-0 rounded-full blur-3xl opacity-20;
+    background-image: linear-gradient(90deg, rgba(59, 130, 246, 1), rgba(6, 182, 212, 1));
+    z-index: -10;
+  }
+
+  /* ---------------------------
+   Neon Animated Border Strip
+   --------------------------- */
+
+/* Wrapper for cards that need the neon border */
+.neon-border-wrapper {
+  position: relative;
+  border-radius: 1.5rem;
+  padding: 3px; /* thickness of the neon border */
+  background: linear-gradient(90deg, 
+    #06b6d4 0%,   /* cyan-500 */
+    #0ea5e9 5%,   /* sky-500 */
+    #3b82f6 10%,  /* blue-500 */
+    #6366f1 15%,  /* indigo-500 */
+    #8b5cf6 20%,  /* purple-500 */
+    #a855f7 25%,  /* violet-500 */
+    #ec4899 30%,  /* pink-500 */
+    #f43f5e 35%,  /* rose-500 */
+    #f43f5e 65%,  /* rose-500 */
+    #ec4899 70%,  /* pink-500 */
+    #a855f7 75%,  /* violet-500 */
+    #8b5cf6 80%,  /* purple-500 */
+    #6366f1 85%,  /* indigo-500 */
+    #3b82f6 90%,  /* blue-500 */
+    #0ea5e9 95%,  /* sky-500 */
+    #06b6d4 100%  /* cyan-500 */
+  );
+  background-size: 200% 100%;
+  animation: neon-oscillate 8s ease-in-out infinite;
+}
+
+/* In dark mode, make it more vibrant */
+.dark .neon-border-wrapper {
+  background: linear-gradient(90deg, 
+    #22d3ee 0%,   /* cyan-400 */
+    #38bdf8 5%,   /* sky-400 */
+    #60a5fa 10%,  /* blue-400 */
+    #818cf8 15%,  /* indigo-400 */
+    #a78bfa 20%,  /* purple-400 */
+    #c084fc 25%,  /* violet-400 */
+    #f472b6 30%,  /* pink-400 */
+    #fb7185 35%,  /* rose-400 */
+    #fb7185 65%,  /* rose-400 */
+    #f472b6 70%,  /* pink-400 */
+    #c084fc 75%,  /* violet-400 */
+    #a78bfa 80%,  /* purple-400 */
+    #818cf8 85%,  /* indigo-400 */
+    #60a5fa 90%,  /* blue-400 */
+    #38bdf8 95%,  /* sky-400 */
+    #22d3ee 100%  /* cyan-400 */
+  );
+  background-size: 200% 100%;
+  box-shadow: 0 0 30px rgba(34, 211, 238, 0.3),
+              0 0 60px rgba(96, 165, 250, 0.2);
+  animation: neon-oscillate 8s ease-in-out infinite;
+}
+
+/* Smooth continuous oscillating animation */
+@keyframes neon-oscillate {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .neon-border-wrapper {
+    animation: none !important;
+    background: linear-gradient(90deg, #06b6d4, #3b82f6);
+  }
+}
+}
